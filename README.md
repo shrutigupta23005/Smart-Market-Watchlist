@@ -3,6 +3,10 @@
 
 > **"SIGNAL does not answer 'what is happening now.' It answers 'what changed since I last looked, and does it deserve my attention.'"**
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-cyan?style=for-the-badge&logo=github)](https://shrutigupta23005.github.io/Smart-Market-Watchlist/)
+[![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=for-the-badge&logo=render)](https://render.com/deploy?repo=https://github.com/shrutigupta23005/Smart-Market-Watchlist)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20to-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com/new/clone?repository-url=https://github.com/shrutigupta23005/Smart-Market-Watchlist)
+
 ---
 
 ## 🧭 Product Philosophy & The Attention Manifesto
@@ -205,6 +209,37 @@ Smart-Market-Watchlist/
 │   │   └── main.jsx
 │   └── package.json
 └── README.md
+```
+
+---
+
+## 🚀 Deployment Options
+
+### 1. GitHub Pages (Static / In-Browser Interactive Mode)
+The frontend includes an intelligent simulation engine that runs 100% in-browser when opened on GitHub Pages:
+- Live Demo: [https://shrutigupta23005.github.io/Smart-Market-Watchlist/](https://shrutigupta23005.github.io/Smart-Market-Watchlist/)
+- Automated CI/CD: Handled by `.github/workflows/deploy.yml` on every push to `main`.
+- Or deploy directly from the `gh-pages` branch.
+
+### 2. Full-Stack on Render (Backend + Database + Frontend)
+A production Blueprint [`render.yaml`](file:///C:/Users/Dell/signal/render.yaml) is included in the repository:
+1. Fork or push to your GitHub account.
+2. Log into [Render.com](https://render.com) and click **New + Blueprints**.
+3. Select this repository. Render will automatically provision:
+   - Node.js Web Service for the backend API.
+   - Static Web App for the React frontend with automatic environment variable linking.
+
+### 3. Vercel
+Configuration is included in [`vercel.json`](file:///C:/Users/Dell/signal/vercel.json):
+```bash
+npm install -g vercel
+vercel
+```
+
+### 4. Docker & Docker Compose
+Run the entire production stack (MongoDB, Backend, Ingestion Worker) with a single command:
+```bash
+docker compose up --build
 ```
 
 ---
