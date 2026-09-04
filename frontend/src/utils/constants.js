@@ -21,6 +21,13 @@ export const ATTENTION_BUCKETS = {
 };
 
 export const FINGERPRINTS = {
+  PRICE_BREAKOUT: { label: 'Price Breakout', color: 'text-emerald-400 bg-emerald-950/50 border-emerald-800' },
+  VOLUME_SURGE: { label: 'Volume Surge', color: 'text-amber-400 bg-amber-950/50 border-amber-800' },
+  TREND_REVERSAL: { label: 'Trend Reversal', color: 'text-rose-400 bg-rose-950/50 border-rose-800' },
+  RANK_CHANGE: { label: 'Rank Change', color: 'text-cyan-400 bg-cyan-950/50 border-cyan-800' },
+  SECTOR_DECOUPLED: { label: 'Sector Decoupled', color: 'text-purple-400 bg-purple-950/50 border-purple-800' },
+  SECTOR_ECHO: { label: 'Sector Echo', color: 'text-indigo-400 bg-indigo-950/50 border-indigo-800' },
+  QUIET_DRIFT: { label: 'Quiet Drift', color: 'text-slate-400 bg-slate-800/40 border-slate-700' },
   DIVERGENT_MOVE: { label: 'Divergent Move', color: 'text-purple-400 bg-purple-950/50 border-purple-800' },
   VOLATILITY_SPIKE: { label: 'Volatility Spike', color: 'text-amber-400 bg-amber-950/50 border-amber-800' },
   SUDDEN_REVERSAL: { label: 'Sudden Reversal', color: 'text-cyan-400 bg-cyan-950/50 border-cyan-800' },

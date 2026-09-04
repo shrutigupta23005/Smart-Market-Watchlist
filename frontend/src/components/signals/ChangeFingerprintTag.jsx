@@ -1,6 +1,6 @@
 import React from 'react';
 import { FINGERPRINTS } from '../../utils/constants';
-import { Zap, GitCompare, ArrowUpDown, TrendingUp, Activity, Compass } from 'lucide-react';
+import { Zap, GitCompare, ArrowUpDown, TrendingUp, Activity, Compass, BarChart2, Hash, Layers, ShieldCheck } from 'lucide-react';
 
 export default function ChangeFingerprintTag({ fingerprint = 'STABLE', description }) {
   const meta = FINGERPRINTS[fingerprint] || {
@@ -10,6 +10,20 @@ export default function ChangeFingerprintTag({ fingerprint = 'STABLE', descripti
 
   const getIcon = () => {
     switch (fingerprint) {
+      case 'PRICE_BREAKOUT':
+        return <TrendingUp className="w-3 h-3" />;
+      case 'VOLUME_SURGE':
+        return <BarChart2 className="w-3 h-3" />;
+      case 'TREND_REVERSAL':
+        return <ArrowUpDown className="w-3 h-3" />;
+      case 'RANK_CHANGE':
+        return <Hash className="w-3 h-3" />;
+      case 'SECTOR_DECOUPLED':
+        return <GitCompare className="w-3 h-3" />;
+      case 'SECTOR_ECHO':
+        return <Layers className="w-3 h-3" />;
+      case 'QUIET_DRIFT':
+        return <ShieldCheck className="w-3 h-3" />;
       case 'DIVERGENT_MOVE':
         return <GitCompare className="w-3 h-3" />;
       case 'VOLATILITY_SPIKE':

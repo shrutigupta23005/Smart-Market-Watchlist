@@ -43,3 +43,13 @@ export const formatDuration = (awayDuration) => {
   }
   return parts.join(', ');
 };
+
+export const formatSessionTime = (dateInput) => {
+  if (!dateInput) return 'Previous Session';
+  const d = new Date(dateInput);
+  if (isNaN(d.getTime())) return 'Previous Session';
+  const dayName = d.toLocaleDateString('en-US', { weekday: 'long' });
+  const timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  return `${dayName} ${timeStr}`;
+};
+

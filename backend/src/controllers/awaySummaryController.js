@@ -214,7 +214,19 @@ const getAwaySummary = async (req, res, next) => {
       );
     }
 
+    // Evaluate Data Confidence across ticks
+    const delayedCount = ticks.filter((t) => t.freshness !== 'LIVE').length;
+    const dataConfidence = {
+      level: delayedCount > 2 ? 'LIMITED' : 'HIGH',
+      freshCount: ticks.length - delayedCount,
+      delayedCount,
+      totalCount: ticks.length,
+      conflicts: 0
+    };
+
     const responsePayload = {
+      lastCheckedAt: snapshot ? snapshot.takenAt : new Date(Date.now() - (awayDuration.days * 86400 + awayDuration.hours * 3600 + awayDuration.minutes * 60) * 1000),
+      currentTimestamp: new Date(),
       awayDuration,
       totalStocks: symbols.length,
       estimatedReviewTimeSeconds,
@@ -224,6 +236,7 @@ const getAwaySummary = async (req, res, next) => {
       groupedSignals,
       nothingHappened,
       quietHoursActive,
+      dataConfidence,
       userPreferences: userPrefs
     };
 
