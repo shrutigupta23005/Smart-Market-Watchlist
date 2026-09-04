@@ -1,4 +1,5 @@
 const snapshotService = require('../services/snapshotService');
+const { clearSummaryCache } = require('./awaySummaryController');
 
 // @desc    Acknowledge current view / take a fresh snapshot on session end / heartbeat
 // @route   POST /api/away-summary/ack
@@ -6,6 +7,7 @@ const snapshotService = require('../services/snapshotService');
 const acknowledgeSession = async (req, res, next) => {
   try {
     const snapshot = await snapshotService.takeSnapshot(req.user._id);
+    clearSummaryCache(req.user._id);
 
     res.json({
       success: true,

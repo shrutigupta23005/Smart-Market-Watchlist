@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const env = require('../config/env');
+const { clearSummaryCache } = require('./awaySummaryController');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, env.JWT_SECRET, {
@@ -124,6 +125,7 @@ const updatePreferences = async (req, res, next) => {
     }
 
     await user.save();
+    clearSummaryCache(req.user._id);
 
     res.json({
       success: true,

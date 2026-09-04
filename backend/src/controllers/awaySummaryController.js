@@ -239,6 +239,16 @@ const getAwaySummary = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  getAwaySummary
+const clearSummaryCache = (userId) => {
+  if (userId) {
+    summaryCache.delete(userId.toString());
+  } else {
+    summaryCache.clear();
+  }
 };
+
+module.exports = {
+  getAwaySummary,
+  clearSummaryCache
+};
+

@@ -1,5 +1,6 @@
 const personalizationService = require('../services/personalizationService');
 const attentionDecayManager = require('../jobs/attentionDecayJob');
+const { clearSummaryCache } = require('./awaySummaryController');
 
 // @desc    Submit feedback on an alert (useful / not_useful / dismissed)
 // @route   POST /api/feedback
@@ -24,6 +25,8 @@ const submitAlertFeedback = async (req, res, next) => {
     if (['useful', 'not_useful', 'expanded'].includes(action)) {
       attentionDecayManager.resetStreak(req.user._id, symbol);
     }
+
+    clearSummaryCache(req.user._id);
 
     res.status(201).json({
       success: true,

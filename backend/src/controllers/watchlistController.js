@@ -1,6 +1,7 @@
 const WatchlistItem = require('../models/WatchlistItem');
 const { STOCK_UNIVERSE } = require('../utils/stockUniverse');
 const marketDataProvider = require('../services/marketDataProvider');
+const { clearSummaryCache } = require('./awaySummaryController');
 
 // @desc    Get user's active watchlist with live prices and freshness
 // @route   GET /api/watchlist
@@ -111,6 +112,7 @@ const addWatchlistItem = async (req, res, next) => {
     }
 
     const tick = await marketDataProvider.getLatestTick(cleanSymbol);
+    clearSummaryCache(req.user._id);
 
     res.status(201).json({
       success: true,
@@ -151,6 +153,7 @@ const removeWatchlistItem = async (req, res, next) => {
 
     item.isActive = false;
     await item.save();
+    clearSummaryCache(req.user._id);
 
     res.json({
       success: true,
