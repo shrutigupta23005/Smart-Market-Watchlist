@@ -83,7 +83,7 @@ export default function Navbar({ activeTab, setActiveTab, onDemoSeeded }) {
         {/* Demo Controls & User Profile */}
         <div className="flex items-center gap-3">
           {/* Demo Preset Selector */}
-          <div className="hidden lg:flex items-center gap-1 bg-[#171E27] p-1 rounded-lg border border-slate-800 text-[11px] font-mono">
+          <div className="hidden sm:flex items-center gap-1 bg-[#171E27] p-1 rounded-lg border border-slate-800 text-[11px] font-mono">
             <span className="text-slate-500 px-1.5 flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-cyan-400" />
               Scenario:
@@ -91,24 +91,24 @@ export default function Navbar({ activeTab, setActiveTab, onDemoSeeded }) {
             <button
               onClick={() => triggerSeed('rich_signals')}
               disabled={seeding}
-              className={`px-2 py-0.5 rounded transition-colors ${
+              className={`px-2 py-0.5 rounded transition-colors flex items-center gap-1 ${
                 currentScenario === 'rich_signals'
-                  ? 'bg-cyan-950 text-cyan-300 border border-cyan-800'
+                  ? 'bg-rose-950 text-rose-300 border border-rose-800 font-semibold'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              Changes
+              <span>🔥 Changes</span>
             </button>
             <button
               onClick={() => triggerSeed('nothing_happened')}
               disabled={seeding}
-              className={`px-2 py-0.5 rounded transition-colors ${
+              className={`px-2 py-0.5 rounded transition-colors flex items-center gap-1 ${
                 currentScenario === 'nothing_happened'
-                  ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                  ? 'bg-emerald-950 text-emerald-300 border border-emerald-800 font-semibold'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              Silence
+              <span>🍃 Silence</span>
             </button>
           </div>
 

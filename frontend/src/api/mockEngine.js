@@ -1,6 +1,5 @@
-// In-browser mock engine for static deployment (e.g. GitHub Pages)
-// Allows visitors and judges to experience 100% of SIGNAL's features
-// matching the exact backend response structure.
+// In-browser mock engine for static deployment & interactive scenario testing.
+// Provides two distinctly different states: "Changes" and "Silence".
 
 const STOCK_UNIVERSE = [
   { symbol: 'RELIANCE', name: 'Reliance Industries', sector: 'Energy', basePrice: 2940.50, volatility: 'normal' },
@@ -31,7 +30,7 @@ class MockSignalEngine {
         mutedSignals: []
       }
     };
-    this.lastSessionTime = new Date(Date.now() - 4 * 60 * 60 * 1000); // 4 hours ago
+    this.lastSessionTime = new Date(Date.now() - 4 * 60 * 60 * 1000);
     this.watchlist = ['TATAMOTORS', 'INFY', 'RELIANCE', 'HDFCBANK', 'TCS'];
     this.feedbackHistory = [];
   }
@@ -41,52 +40,139 @@ class MockSignalEngine {
     if (mode === 'nothing_happened') {
       this.lastSessionTime = new Date();
     } else {
-      this.lastSessionTime = new Date(Date.now() - 4 * 60 * 60 * 1000);
+      this.lastSessionTime = new Date(Date.now() - (2 * 24 + 4) * 3600 * 1000);
     }
   }
 
   getAwaySummary() {
     const isQuiet = this.mode === 'nothing_happened';
-    const awayDuration = isQuiet
-      ? { days: 0, hours: 0, minutes: 1 }
-      : { days: 0, hours: 4, minutes: 25 };
 
     if (isQuiet) {
-      const quietList = this.watchlist.map((sym) => {
-        const item = STOCK_UNIVERSE.find((s) => s.symbol === sym) || { name: sym, basePrice: 1000, sector: 'General' };
-        return {
-          symbol: sym,
-          name: item.name,
-          sector: item.sector,
-          currentPrice: item.basePrice,
-          snapshotPrice: item.basePrice,
-          percentChange: 0.04,
-          attentionScore: 4,
-          bucket: 'NO_ACTION',
-          fingerprint: 'QUIET_DRIFT',
-          fingerprintDesc: 'Price moved within normal noise range',
-          confidence: 'verified',
-          freshness: 'LIVE',
-          ageSeconds: 2,
-          reasons: ['Price moved within historical noise bounds (+0.04%)']
-        };
-      });
-
+      // SILENCE SCENARIO: The core philosophy in action
       return {
-        awayDuration,
+        scenarioMode: 'silence',
+        nothingHappened: true,
+        awayDuration: { days: 0, hours: 4, minutes: 25 },
         totalStocks: this.watchlist.length,
         estimatedReviewTimeSeconds: 5,
         mustSee: [],
         worthChecking: [],
-        noAction: quietList,
+        noAction: [
+          {
+            symbol: 'TATAMOTORS',
+            name: 'Tata Motors Ltd.',
+            sector: 'Automobile',
+            currentPrice: 980.90,
+            snapshotPrice: 980.50,
+            percentChange: 0.04,
+            attentionScore: 4,
+            bucket: 'NO_ACTION',
+            fingerprint: 'QUIET_DRIFT',
+            fingerprintLabel: 'Quiet Drift',
+            fingerprintDesc: 'Routine Brownian drift within historical noise band',
+            noiseThreshold: '±1.9%',
+            noiseMultiple: '0.02x',
+            filterReason: 'Routine spread oscillation (0.04%) well within baseline noise (±1.9%)',
+            confidence: 'verified',
+            freshness: 'LIVE',
+            ageSeconds: 2,
+            reasons: ['Movement of +0.04% is within normal intra-day noise']
+          },
+          {
+            symbol: 'INFY',
+            name: 'Infosys Ltd.',
+            sector: 'Information Technology',
+            currentPrice: 1780.50,
+            snapshotPrice: 1780.20,
+            percentChange: 0.02,
+            attentionScore: 2,
+            bucket: 'NO_ACTION',
+            fingerprint: 'QUIET_DRIFT',
+            fingerprintLabel: 'Quiet Drift',
+            fingerprintDesc: 'Tracked Nifty IT index co-movement; zero divergence',
+            noiseThreshold: '±1.6%',
+            noiseMultiple: '0.01x',
+            filterReason: 'Tracked sector benchmark exactly (0.0% divergence); zero alert needed',
+            confidence: 'verified',
+            freshness: 'LIVE',
+            ageSeconds: 3,
+            reasons: ['No divergence from IT sector index (+0.0%)']
+          },
+          {
+            symbol: 'RELIANCE',
+            name: 'Reliance Industries',
+            sector: 'Energy',
+            currentPrice: 2943.10,
+            snapshotPrice: 2940.50,
+            percentChange: 0.09,
+            attentionScore: 6,
+            bucket: 'NO_ACTION',
+            fingerprint: 'QUIET_DRIFT',
+            fingerprintLabel: 'Quiet Drift',
+            fingerprintDesc: 'Gaussian price drift; zero trend reversal detected',
+            noiseThreshold: '±2.1%',
+            noiseMultiple: '0.04x',
+            filterReason: '0.09% move did not trigger volume surge or trend reversal',
+            confidence: 'verified',
+            freshness: 'LIVE',
+            ageSeconds: 2,
+            reasons: ['0.09% move is 0.04x daily standard deviation']
+          },
+          {
+            symbol: 'HDFCBANK',
+            name: 'HDFC Bank Ltd.',
+            sector: 'Banking & Financial',
+            currentPrice: 1640.30,
+            snapshotPrice: 1640.80,
+            percentChange: -0.03,
+            attentionScore: 3,
+            bucket: 'NO_ACTION',
+            fingerprint: 'QUIET_DRIFT',
+            fingerprintLabel: 'Quiet Drift',
+            fingerprintDesc: 'Stable bank index tracking with zero trend reversal',
+            noiseThreshold: '±1.4%',
+            noiseMultiple: '0.02x',
+            filterReason: 'Price remained perfectly anchored to historical median',
+            confidence: 'verified',
+            freshness: 'LIVE',
+            ageSeconds: 4,
+            reasons: ['No meaningful shift in volatility regime']
+          },
+          {
+            symbol: 'TCS',
+            name: 'Tata Consultancy Services',
+            sector: 'Information Technology',
+            currentPrice: 4117.50,
+            snapshotPrice: 4120.00,
+            percentChange: -0.06,
+            attentionScore: 3,
+            bucket: 'NO_ACTION',
+            fingerprint: 'QUIET_DRIFT',
+            fingerprintLabel: 'Quiet Drift',
+            fingerprintDesc: 'Move is 0.04x daily standard deviation; filtered as noise',
+            noiseThreshold: '±1.5%',
+            noiseMultiple: '0.04x',
+            filterReason: 'Fell 0.06% within trailing volatility corridor (±1.5%)',
+            confidence: 'verified',
+            freshness: 'LIVE',
+            ageSeconds: 4,
+            reasons: ['Price moved within normal noise bounds (-0.06%)']
+          }
+        ],
         groupedSignals: [],
-        nothingHappened: true,
         quietHoursActive: false,
-        userPreferences: this.currentUser.preferences
+        userPreferences: this.currentUser.preferences,
+        calmMetrics: {
+          interventionsRequired: 0,
+          attentionPreservedPercent: 100,
+          streakCheckIns: 4,
+          averageDriftPercent: 0.04,
+          estimatedMinutesSaved: 14
+        }
       };
     }
 
-    // Rich signals scenario
+    // CHANGES SCENARIO: High-attention, meaningful market movements
     const mustSee = [
       {
         symbol: 'TATAMOTORS',
@@ -98,14 +184,15 @@ class MockSignalEngine {
         attentionScore: 88,
         bucket: 'MUST_SEE',
         fingerprint: 'DIVERGENT_MOVE',
-        fingerprintDesc: 'Decoupled from sector index move',
+        fingerprintLabel: 'Divergent Breakout',
+        fingerprintDesc: 'Decoupled from sector index move with volume expansion',
         confidence: 'verified',
         freshness: 'LIVE',
         ageSeconds: 1,
         reasons: [
-          'Rose 6.1% since your last visit (was ₹980.50 → now ₹1,040.20)',
+          'Rose +6.09% since your last visit (was ₹980.50 → now ₹1,040.20)',
           'Move is 3.8x greater than this stock\'s trailing volatility baseline',
-          'Diverged 5.4% against Automobile sector index (+0.7%)',
+          'Diverged +5.4% against Automobile sector index (+0.7%)',
           'Shifted 3 positions in your watchlist ranking (from #4 to #1)'
         ]
       }
@@ -122,14 +209,15 @@ class MockSignalEngine {
         attentionScore: 64,
         bucket: 'WORTH_CHECKING',
         fingerprint: 'SECTOR_ECHO',
-        fingerprintDesc: 'Moving with broader sector trend',
+        fingerprintLabel: 'Sector Echo',
+        fingerprintDesc: 'Moving in tandem with broader tech rally',
         confidence: 'verified',
         freshness: 'LIVE',
         ageSeconds: 3,
         reasons: [
-          'Climbed 2.4% along with IT sector co-movement (+2.1%)',
+          'Climbed +2.40% along with IT sector co-movement (+2.1%)',
           'Trend continued upward from previous session',
-          'Shifted 1 position in volatility ranking'
+          'Shifted +1 position in volatility ranking'
         ]
       },
       {
@@ -142,13 +230,14 @@ class MockSignalEngine {
         attentionScore: 46,
         bucket: 'WORTH_CHECKING',
         fingerprint: 'TREND_REVERSAL',
-        fingerprintDesc: 'Price reversed from prior direction',
+        fingerprintLabel: 'Trend Reversal',
+        fingerprintDesc: 'Price reversed downward from prior upward velocity',
         confidence: 'verified',
         freshness: 'LIVE',
         ageSeconds: 5,
         reasons: [
           'Reversed direction compared to your last session (was rising, now declining)',
-          'Down 1.1% against Bank Nifty benchmark (+0.2%)'
+          'Down -1.10% against Bank Nifty benchmark (+0.2%)'
         ]
       }
     ];
@@ -164,7 +253,11 @@ class MockSignalEngine {
         attentionScore: 6,
         bucket: 'NO_ACTION',
         fingerprint: 'QUIET_DRIFT',
+        fingerprintLabel: 'Quiet Drift',
         fingerprintDesc: 'Price moved within normal noise range',
+        noiseThreshold: '±2.1%',
+        noiseMultiple: '0.04x',
+        filterReason: '0.09% move did not trigger volume or sector divergence',
         confidence: 'verified',
         freshness: 'LIVE',
         ageSeconds: 2,
@@ -180,7 +273,11 @@ class MockSignalEngine {
         attentionScore: 3,
         bucket: 'NO_ACTION',
         fingerprint: 'QUIET_DRIFT',
+        fingerprintLabel: 'Quiet Drift',
         fingerprintDesc: 'Price moved within normal noise range',
+        noiseThreshold: '±1.5%',
+        noiseMultiple: '0.04x',
+        filterReason: 'Fell 0.06% within trailing volatility corridor (±1.5%)',
         confidence: 'verified',
         freshness: 'LIVE',
         ageSeconds: 4,
@@ -204,14 +301,15 @@ class MockSignalEngine {
     ];
 
     return {
-      awayDuration,
+      scenarioMode: 'changes',
+      nothingHappened: false,
+      awayDuration: { days: 2, hours: 4, minutes: 0 },
       totalStocks: this.watchlist.length,
       estimatedReviewTimeSeconds: 45,
       mustSee,
       worthChecking,
       noAction,
       groupedSignals,
-      nothingHappened: false,
       quietHoursActive: false,
       userPreferences: this.currentUser.preferences
     };

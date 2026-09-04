@@ -153,6 +153,13 @@ class SignalEngine {
       reasons.push('No meaningful change since last visit');
     }
 
+    const stdDevPercent = Math.max(0.8, trailingStdDev || 1.5);
+    const noiseMultiple = `${(absPercent / stdDevPercent).toFixed(2)}x`;
+    const noiseThreshold = `±${(stdDevPercent * 1.5).toFixed(1)}%`;
+    const filterReason = absPercent < 0.3
+      ? `Price drift (${absPercent.toFixed(2)}%) stayed within 20-period volatility noise baseline (${noiseThreshold})`
+      : `Move (${absPercent.toFixed(2)}%) did not exhibit divergence or trend reversal; filtered out as noise`;
+
     return {
       symbol,
       currentPrice,
@@ -168,6 +175,9 @@ class SignalEngine {
       fingerprintLabel: fingerprint.label,
       fingerprintDesc: fingerprint.description,
       isMeaningful: meaningfulCheck.isMeaningful,
+      noiseThreshold,
+      noiseMultiple,
+      filterReason,
       breakdown: {
         changeComponent,
         unusualnessComponent,
