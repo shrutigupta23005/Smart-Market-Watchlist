@@ -1,0 +1,22 @@
+{
+  "name": "signal-workspace",
+  "version": "1.0.0",
+  "description": "SIGNAL - A watchlist that remembers what you saw and tells you what actually changed",
+  "scripts": {
+    "start:backend": "npm --prefix backend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "test:backend": "npm --prefix backend test",
+    "build:frontend": "npm --prefix frontend run build"
+  },
+  "keywords": [
+    "fintech",
+    "stock-market",
+    "watchlist",
+    "signal-engine",
+    "attention-economy",
+    "mern-stack"
+  ],
+  "author": "Shruti Gupta",
+  "license": "MIT"
+}
