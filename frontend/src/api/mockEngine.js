@@ -19,6 +19,7 @@ class MockSignalEngine {
   constructor() {
     this.mode = 'rich_signals'; // 'rich_signals' or 'nothing_happened'
     this.currentUser = {
+      _id: 'mock_demo_user',
       id: 'mock_demo_user',
       name: 'Shruti Gupta',
       email: 'shruti@signal.market',
@@ -240,7 +241,7 @@ class MockSignalEngine {
         name: stock.name,
         sector: stock.sector,
         currentPrice: stock.basePrice,
-        priceChangePercent: (Math.random() * 2 - 1).toFixed(2),
+        priceChangePercent: '1.45',
         freshness: 'LIVE',
         confidence: 'verified',
         updatedAt: new Date().toISOString()

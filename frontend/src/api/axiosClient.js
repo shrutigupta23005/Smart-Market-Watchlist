@@ -3,32 +3,34 @@ import { mockEngine } from './mockEngine';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-  timeout: 4000,
+  timeout: 5000,
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
-// Request interceptor: attach token
-axiosClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('signal_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
+// Detect static hosting environment (GitHub Pages, etc.)
+const isStaticHost = typeof window !== 'undefined' && (
+  window.location.hostname.includes('github.io') ||
+  window.location.hostname.includes('pages.dev') ||
+  window.location.protocol === 'file:'
+);
 
 // Helper for browser mock responses
 function handleMockRoute(url, method, data) {
-  const cleanUrl = url.replace(/^\/api/, '');
+  const cleanUrl = (url || '').replace(/^\/api/, '');
 
   if (cleanUrl.startsWith('/auth/me')) {
-    return { success: true, data: { user: mockEngine.currentUser } };
+    return { success: true, data: mockEngine.currentUser };
   }
   if (cleanUrl.startsWith('/auth/login') || cleanUrl.startsWith('/auth/signup')) {
-    return { success: true, data: { token: 'mock_jwt_token_2026', user: mockEngine.currentUser } };
+    return {
+      success: true,
+      data: {
+        ...mockEngine.currentUser,
+        token: 'mock_jwt_token_2026'
+      }
+    };
   }
   if (cleanUrl.startsWith('/away-summary/ack')) {
     mockEngine.setScenario('nothing_happened');
@@ -91,16 +93,45 @@ function handleMockRoute(url, method, data) {
     return { success: true, message: `Seeded ${mode} scenario`, mode };
   }
 
-  return null;
+  return { success: true, data: null };
 }
 
-// Response interceptor: auto fallback to mock engine if backend unreachable
+// Request interceptor: attach token or bypass network if on static GitHub Pages
+axiosClient.interceptors.request.use((config) => {
+  if (isStaticHost && !import.meta.env.VITE_API_BASE_URL) {
+    config.adapter = async (cfg) => {
+      const parsedData = cfg.data ? (typeof cfg.data === 'string' ? JSON.parse(cfg.data) : cfg.data) : null;
+      const result = handleMockRoute(cfg.url || '', cfg.method?.toLowerCase(), parsedData);
+      return {
+        data: result,
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config: cfg
+      };
+    };
+  }
+
+  const token = localStorage.getItem('signal_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+// Response interceptor: auto fallback if backend network failure occurs
 axiosClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    // If backend is down or unreachable (static deployment or network failure), provide offline simulation
-    if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED' || (error.response && error.response.status === 404)) {
-      const mockResult = handleMockRoute(error.config?.url || '', error.config?.method?.toLowerCase(), error.config?.data ? JSON.parse(error.config.data) : null);
+    if (
+      error.code === 'ERR_NETWORK' ||
+      error.code === 'ECONNABORTED' ||
+      (error.response && [404, 405, 500, 502, 503].includes(error.response.status))
+    ) {
+      const parsedData = error.config?.data ? (typeof error.config.data === 'string' ? JSON.parse(error.config.data) : error.config.data) : null;
+      const mockResult = handleMockRoute(error.config?.url || '', error.config?.method?.toLowerCase(), parsedData);
       if (mockResult) {
         return Promise.resolve(mockResult);
       }

@@ -92,6 +92,24 @@ export default function SignupPage({ onSwitchToLogin }) {
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create Account'}
             {!loading && <ArrowRight className="w-4 h-4" />}
           </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+              setLoading(true);
+              try {
+                await signup('Shruti Gupta', 'shruti@signal.market', 'demo123');
+              } catch (err) {
+                setError(err?.error || 'Failed to start demo');
+              } finally {
+                setLoading(false);
+              }
+            }}
+            disabled={loading}
+            className="w-full py-2 px-4 rounded-lg bg-slate-850 hover:bg-slate-800 text-cyan-300 border border-slate-700/80 font-medium text-xs flex items-center justify-center gap-2 transition-colors"
+          >
+            ⚡ Instant Demo Access (Guest Mode)
+          </button>
         </form>
 
         <div className="mt-6 text-center text-xs text-slate-500">
