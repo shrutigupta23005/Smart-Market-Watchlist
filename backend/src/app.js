@@ -39,7 +39,22 @@ app.use('/api/insights', insightsRoutes);
 app.use('/api/demo', demoRoutes);
 app.patch('/api/preferences', protect, updatePreferences);
 
+// Serve static frontend in full-stack production if dist exists
+const path = require('path');
+const fs = require('fs');
+const frontendDist = path.resolve(__dirname, '../../frontend/dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+}
+
 // Centralized error handling
 app.use(errorHandler);
 
 module.exports = app;
+

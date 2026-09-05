@@ -1,8 +1,16 @@
 import axios from 'axios';
 import { mockEngine } from './mockEngine';
 
+let rawBase = import.meta.env.VITE_API_BASE_URL || '/api';
+if (rawBase && !rawBase.startsWith('/') && !rawBase.startsWith('http://') && !rawBase.startsWith('https://')) {
+  rawBase = `https://${rawBase}`;
+}
+if (rawBase.startsWith('http') && !rawBase.endsWith('/api')) {
+  rawBase = `${rawBase.replace(/\/+$/, '')}/api`;
+}
+
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: rawBase,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json'

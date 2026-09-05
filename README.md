@@ -3,7 +3,8 @@
 
 > **"SIGNAL does not answer 'what is happening now.' It answers 'what changed since I last looked, and does it deserve my attention.'"**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-cyan?style=for-the-badge&logo=github)](https://shrutigupta23005.github.io/Smart-Market-Watchlist/)
+[![Live Demo](https://img.shields.io/badge/LIVE%20DEMO-Interactive%20Platform-06b6d4?style=for-the-badge&logo=vercel)](https://shrutigupta23005.github.io/Smart-Market-Watchlist/)
+[![GitHub](https://img.shields.io/badge/GITHUB-Repository-181717?style=for-the-badge&logo=github)](https://github.com/shrutigupta23005/Smart-Market-Watchlist)
 
 ---
 
@@ -211,34 +212,20 @@ Smart-Market-Watchlist/
 
 ---
 
-## 🚀 Deployment Options
+## 🚀 Production Deployment
 
-### 1. GitHub Pages (Static / In-Browser Interactive Mode)
-The frontend includes an intelligent simulation engine that runs 100% in-browser when opened on GitHub Pages:
-- Live Demo: [https://shrutigupta23005.github.io/Smart-Market-Watchlist/](https://shrutigupta23005.github.io/Smart-Market-Watchlist/)
-- Automated CI/CD: Handled by `.github/workflows/deploy.yml` on every push to `main`.
-- Or deploy directly from the `gh-pages` branch.
+### 🌐 Live Platforms
+* **Interactive Live Demo**: [https://shrutigupta23005.github.io/Smart-Market-Watchlist/](https://shrutigupta23005.github.io/Smart-Market-Watchlist/)
+* **Source Repository**: [https://github.com/shrutigupta23005/Smart-Market-Watchlist](https://github.com/shrutigupta23005/Smart-Market-Watchlist)
 
-### 2. Full-Stack on Render (Backend + Database + Frontend)
-A production Blueprint [`render.yaml`](file:///C:/Users/Dell/signal/render.yaml) is included in the repository:
-1. Fork or push to your GitHub account.
-2. Log into [Render.com](https://render.com) and click **New + Blueprints**.
-3. Select this repository. Render will automatically provision:
-   - Node.js Web Service for the backend API.
-   - Static Web App for the React frontend with automatic environment variable linking.
-
-### 3. Vercel
-Configuration is included in [`vercel.json`](file:///C:/Users/Dell/signal/vercel.json):
-```bash
-npm install -g vercel
-vercel
-```
-
-### 4. Docker & Docker Compose
-Run the entire production stack (MongoDB, Backend, Ingestion Worker) with a single command:
-```bash
-docker compose up --build
-```
+### 📦 Full-Stack Deployment Architecture
+SIGNAL is engineered to operate seamlessly as both a decoupled cloud service and a unified full-stack server:
+1. **Unified Full-Stack Mode**: The Express server automatically serves the compiled production client (`frontend/dist`) along with all `/api/*` REST endpoints and MongoDB persistent storage from a single process.
+2. **Cloud Blueprints**: Includes `render.yaml` infrastructure-as-code and `vercel.json` for zero-configuration cloud deployment.
+3. **Containerized Stack**: Standard `docker-compose.yml` orchestrates the MongoDB engine, Node.js backend, and price ingestion worker with one command:
+   ```bash
+   docker compose up --build
+   ```
 
 ---
 
