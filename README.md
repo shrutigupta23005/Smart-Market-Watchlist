@@ -4,8 +4,6 @@
 > **"SIGNAL does not answer 'what is happening now.' It answers 'what changed since I last looked, and does it deserve my attention.'"**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-cyan?style=for-the-badge&logo=github)](https://shrutigupta23005.github.io/Smart-Market-Watchlist/)
-[![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=for-the-badge&logo=render)](https://render.com/deploy?repo=https://github.com/shrutigupta23005/Smart-Market-Watchlist)
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20to-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com/new/clone?repository-url=https://github.com/shrutigupta23005/Smart-Market-Watchlist)
 
 ---
 
