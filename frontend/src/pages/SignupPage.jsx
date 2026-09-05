@@ -3,12 +3,13 @@ import { useAuth } from '../hooks/useAuth';
 import { ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function SignupPage({ onSwitchToLogin }) {
-  const { signup } = useAuth();
+  const { signup, guestLogin } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [guestLoading, setGuestLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,7 +87,7 @@ export default function SignupPage({ onSwitchToLogin }) {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || guestLoading}
             className="w-full mt-2 py-2.5 px-4 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-medium text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create Account'}
@@ -96,19 +97,27 @@ export default function SignupPage({ onSwitchToLogin }) {
           <button
             type="button"
             onClick={async () => {
-              setLoading(true);
+              setError('');
+              setGuestLoading(true);
               try {
-                await signup('Shruti Gupta', 'shruti@signal.market', 'demo123');
+                await guestLogin();
               } catch (err) {
-                setError(err?.error || 'Failed to start demo');
+                setError(err?.error || err?.message || 'Failed to start demo session.');
               } finally {
-                setLoading(false);
+                setGuestLoading(false);
               }
             }}
-            disabled={loading}
-            className="w-full py-2 px-4 rounded-lg bg-slate-850 hover:bg-slate-800 text-cyan-300 border border-slate-700/80 font-medium text-xs flex items-center justify-center gap-2 transition-colors"
+            disabled={loading || guestLoading}
+            className="w-full py-2 px-4 rounded-lg bg-slate-850 hover:bg-slate-800 text-cyan-300 border border-slate-700/80 font-medium text-xs flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
           >
-            ⚡ Instant Demo Access (Guest Mode)
+            {guestLoading ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Entering SIGNAL...</span>
+              </>
+            ) : (
+              <>⚡ Instant Demo Access (Guest Mode)</>
+            )}
           </button>
         </form>
 

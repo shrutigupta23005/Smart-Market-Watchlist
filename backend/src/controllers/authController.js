@@ -1,8 +1,10 @@
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const env = require('../config/env');
 const { clearSummaryCache } = require('./awaySummaryController');
+const { seedDemoScenario } = require('../utils/seedDemo');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, env.JWT_SECRET, {
@@ -136,9 +138,55 @@ const updatePreferences = async (req, res, next) => {
   }
 };
 
+// @desc    Authenticate or create a dedicated demo guest account
+// @route   POST /api/auth/guest
+// @access  Public
+const guestLogin = async (req, res, next) => {
+  try {
+    const guestEmail = 'guest@signal.market';
+    let guestUser = await User.findOne({ email: guestEmail });
+
+    if (!guestUser) {
+      const randomPassword = crypto.randomBytes(32).toString('hex');
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash(randomPassword, salt);
+
+      guestUser = await User.create({
+        name: 'Demo Guest',
+        email: guestEmail,
+        passwordHash,
+        preferences: {
+          attentionThreshold: 70,
+          mutedSignals: [],
+          quietHours: { enabled: false, start: '22:00', end: '08:00' },
+          digestModeDefault: false
+        }
+      });
+    }
+
+    // Seed realistic demo scenario data so all major features can be explored immediately
+    await seedDemoScenario(guestUser._id, 'rich_signals');
+    clearSummaryCache(guestUser._id);
+
+    res.json({
+      success: true,
+      data: {
+        _id: guestUser._id,
+        name: guestUser.name,
+        email: guestUser.email,
+        preferences: guestUser.preferences,
+        token: generateToken(guestUser._id)
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signup,
   login,
+  guestLogin,
   getMe,
   updatePreferences
 };

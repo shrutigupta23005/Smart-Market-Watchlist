@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { loginApi, signupApi, getMeApi, updatePreferencesApi } from '../api/authApi';
+import { loginApi, signupApi, guestLoginApi, getMeApi, updatePreferencesApi } from '../api/authApi';
 
 export const AuthContext = createContext(null);
 
@@ -55,6 +55,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const guestLogin = async () => {
+    const res = await guestLoginApi();
+    if (res.success && res.data) {
+      const { token: newToken, ...userData } = res.data;
+      setToken(newToken);
+      setUser(userData);
+      localStorage.setItem('signal_token', newToken);
+      localStorage.setItem('signal_user', JSON.stringify(userData));
+      return userData;
+    }
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -73,7 +85,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, signup, logout, updatePreferences }}>
+    <AuthContext.Provider value={{ user, token, loading, login, signup, guestLogin, logout, updatePreferences }}>
       {children}
     </AuthContext.Provider>
   );

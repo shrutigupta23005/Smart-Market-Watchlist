@@ -49,7 +49,7 @@ const seedDemoScenario = async (userId, mode = 'rich_signals') => {
       trendDirection: 'flat'
     }));
 
-    await Snapshot.updateMany({ userId, isLatest: true }, { $set: { isLatest: false } });
+    await Snapshot.deleteMany({ userId });
     await Snapshot.create({
       userId,
       takenAt: twoDaysFourHoursAgo,
@@ -107,7 +107,7 @@ const seedDemoScenario = async (userId, mode = 'rich_signals') => {
     { symbol: 'BAJFINANCE', price: 7110.00, percentChange: 0.1, attentionRank: 18, volatilityLevel: 'low', trendDirection: 'flat' }
   ];
 
-  await Snapshot.updateMany({ userId, isLatest: true }, { $set: { isLatest: false } });
+  await Snapshot.deleteMany({ userId });
   await Snapshot.create({
     userId,
     takenAt: twoDaysFourHoursAgo,
@@ -176,6 +176,7 @@ const seedDemoScenario = async (userId, mode = 'rich_signals') => {
       description: 'Co-moved with tier-1 IT peers on broad sector sentiment'
     }
   ];
+  await ChangeEvent.deleteMany({ symbol: { $in: ['RELIANCE', 'TCS', 'INFY'] } });
   await ChangeEvent.insertMany(replayEvents);
 
   return {

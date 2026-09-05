@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "node test/signalEngine.test.js"
+    "test": "node test/signalEngine.test.js && node test/guestAuthFlow.test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

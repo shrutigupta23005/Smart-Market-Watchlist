@@ -28,8 +28,8 @@ class MockSignalEngine {
     this.currentUser = {
       _id: 'mock_demo_user',
       id: 'mock_demo_user',
-      name: 'Shruti Gupta',
-      email: 'shruti@signal.market',
+      name: 'Demo Guest',
+      email: 'guest@signal.market',
       preferences: {
         attentionBudget: 5,
         attentionThreshold: 70,

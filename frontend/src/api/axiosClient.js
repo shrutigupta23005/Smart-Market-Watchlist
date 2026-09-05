@@ -23,7 +23,7 @@ function handleMockRoute(url, method, data) {
   if (cleanUrl.startsWith('/auth/me')) {
     return { success: true, data: mockEngine.currentUser };
   }
-  if (cleanUrl.startsWith('/auth/login') || cleanUrl.startsWith('/auth/signup')) {
+  if (cleanUrl.startsWith('/auth/login') || cleanUrl.startsWith('/auth/signup') || cleanUrl.startsWith('/auth/guest')) {
     return {
       success: true,
       data: {
