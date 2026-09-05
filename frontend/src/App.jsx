@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import { WatchlistProvider } from './context/WatchlistContext';
@@ -16,6 +16,12 @@ function AppContent() {
   const { user, loading: authLoading } = useAuth();
   const [authView, setAuthView] = useState('login'); // 'login' | 'signup'
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'watchlist' | 'settings'
+
+  useEffect(() => {
+    if (!user) {
+      setAuthView('login');
+    }
+  }, [user]);
 
   const {
     summary,

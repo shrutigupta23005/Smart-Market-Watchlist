@@ -139,8 +139,8 @@ export default function Navbar({
             )}
           </div>
 
-          <div className="hidden lg:flex flex-col items-end">
-            <span className="text-xs font-medium text-slate-200">{user?.name}</span>
+          <div className="hidden sm:flex flex-col items-end">
+            <span className="text-xs font-medium text-slate-200">{user?.name || 'Investor'}</span>
             <span className="text-[10px] font-mono text-slate-500">
               Threshold: {user?.preferences?.attentionThreshold || 70}
             </span>

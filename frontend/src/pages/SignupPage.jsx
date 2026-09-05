@@ -53,7 +53,7 @@ export default function SignupPage({ onSwitchToLogin }) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full bg-[#171E27] border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-500/60"
-              placeholder="Aditya Sharma"
+              placeholder="Your Full Name"
             />
           </div>
 

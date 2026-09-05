@@ -60,9 +60,28 @@ export default function DashboardPage({
   } = summary || {};
 
   const effectiveTotal = totalStocks || (mustSee.length + worthChecking.length + noAction.length) || watchlist.length || 18;
+  const userName = user?.name?.trim() || 'Investor';
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fadeIn">
+      {/* Dynamic Welcome Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-100 font-mono">
+            Welcome back, <span className="text-cyan-400">{userName}</span>
+          </h1>
+          <p className="text-xs text-slate-400 mt-1">
+            What actually changed across your watchlist since you last looked.
+          </p>
+        </div>
+        {user?.email && (
+          <div className="inline-flex items-center gap-2 self-start sm:self-auto px-3 py-1.5 rounded-lg bg-[#12171E] border border-slate-800 text-xs font-mono text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>{user.email}</span>
+          </div>
+        )}
+      </div>
+
       {nothingHappened ? (
         <SilenceDigestView
           totalStocks={effectiveTotal}

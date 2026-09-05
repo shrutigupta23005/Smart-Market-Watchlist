@@ -21,14 +21,103 @@ function handleMockRoute(url, method, data) {
   const cleanUrl = (url || '').replace(/^\/api/, '');
 
   if (cleanUrl.startsWith('/auth/me')) {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('signal_user');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.name) {
+            mockEngine.currentUser = parsed;
+            return { success: true, data: parsed };
+          }
+        } catch {}
+      }
+    }
     return { success: true, data: mockEngine.currentUser };
   }
-  if (cleanUrl.startsWith('/auth/login') || cleanUrl.startsWith('/auth/signup') || cleanUrl.startsWith('/auth/guest')) {
+  if (cleanUrl.startsWith('/auth/signup')) {
+    const newUser = {
+      _id: 'mock_user_' + Date.now(),
+      id: 'mock_user_' + Date.now(),
+      name: data?.name?.trim() || 'Registered User',
+      email: (data?.email || 'user@example.com').toLowerCase(),
+      preferences: {
+        attentionBudget: 5,
+        attentionThreshold: 70,
+        quietHours: { enabled: false, start: '22:00', end: '08:00' },
+        digestMode: false,
+        mutedSignals: []
+      }
+    };
+    mockEngine.currentUser = newUser;
     return {
       success: true,
       data: {
-        ...mockEngine.currentUser,
-        token: 'mock_jwt_token_2026'
+        ...newUser,
+        token: 'mock_jwt_token_' + Date.now()
+      }
+    };
+  }
+  if (cleanUrl.startsWith('/auth/login')) {
+    const email = (data?.email || '').toLowerCase().trim();
+    let name = 'User';
+
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('signal_user');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed?.email?.toLowerCase() === email && parsed?.name) {
+            name = parsed.name;
+          }
+        } catch {}
+      }
+    }
+
+    if (email === 'guest@signal.market') {
+      name = 'Demo Guest';
+    } else if (name === 'User' && email) {
+      const prefix = email.split('@')[0];
+      name = prefix.charAt(0).toUpperCase() + prefix.slice(1);
+    }
+
+    const authenticatedUser = {
+      ...mockEngine.currentUser,
+      _id: 'mock_user_' + Date.now(),
+      id: 'mock_user_' + Date.now(),
+      name,
+      email: email || mockEngine.currentUser.email
+    };
+    mockEngine.currentUser = authenticatedUser;
+    return {
+      success: true,
+      data: {
+        ...authenticatedUser,
+        token: 'mock_jwt_token_' + Date.now()
+      }
+    };
+  }
+  if (cleanUrl.startsWith('/auth/guest')) {
+    const guestUser = {
+      _id: 'mock_guest_user',
+      id: 'mock_guest_user',
+      name: 'Demo Guest',
+      email: 'guest@signal.market',
+      preferences: {
+        attentionBudget: 5,
+        attentionThreshold: 70,
+        quietHours: { enabled: false, start: '22:00', end: '08:00' },
+        digestMode: false,
+        mutedSignals: []
+      }
+    };
+    mockEngine.currentUser = guestUser;
+    mockEngine.setScenario('rich_signals');
+    return {
+      success: true,
+      data: {
+        ...guestUser,
+        token: 'mock_jwt_token_guest'
       }
     };
   }
